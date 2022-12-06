@@ -30,8 +30,6 @@ app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 import { register } from "./controllers/auth.js";
 import authRoutes from "./routes/auth.js";
-import { verifyToken } from "./middleware/auth.js";
-// import { verifyToken } from "./middleware/auth.js";
 
 /* FILE STORAGE */
 
