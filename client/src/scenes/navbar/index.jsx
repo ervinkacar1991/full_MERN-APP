@@ -39,7 +39,7 @@ const Navbar = () => {
   const primaryLight = theme.palette.primary.light;
   const alt = theme.palette.background.alt;
 
-  const fullName = `${user} ${user}`;
+  const fullName = `${user.firstName} ${user.lastName}`;
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -56,7 +56,7 @@ const Navbar = () => {
             },
           }}
         >
-          Ervin_Social
+          Sociopedia
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
@@ -139,6 +139,7 @@ const Navbar = () => {
               <Close />
             </IconButton>
           </Box>
+
           {/* MENU ITEMS */}
           <FlexBetween
             display="flex"
