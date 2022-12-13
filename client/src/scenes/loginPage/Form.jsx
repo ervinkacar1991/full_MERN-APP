@@ -17,18 +17,18 @@ import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
 
 const registerScheme = yup.object().shape({
-  firstName: yup().string.required("required"),
-  lastName: yup().string.required("required"),
+  firstName: yup.string().required("required"),
+  lastName: yup.string().required("required"),
   email: yup.string().email("invalid email").required("required"),
-  password: yup().string.required("required"),
-  location: yup().string.required("required"),
-  occupation: yup().string.required("required"),
-  picture: yup().string.required("required"),
+  password: yup.string().required("required"),
+  location: yup.string().required("required"),
+  occupation: yup.string().required("required"),
+  picture: yup.string().required("required"),
 });
 
 const loginSchema = yup.object().shape({
   email: yup.string().email("invalid email").required("required"),
-  password: yup.string.required("required"),
+  password: yup.string().required("required"),
 });
 
 const initialValuesRegister = {
@@ -54,7 +54,53 @@ const Form = () => {
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
-  const handleFormSubmit = async (values, onSubmitProps) => {};
+  const register = async (values, onSubmitProps) => {
+    //this allow us ti send form info with image
+    const formData = new FormData();
+    for (let value in values) {
+      formData.append(value, values[value]);
+    }
+    formData.append("picturePath", values.picture.name);
+
+    const savedUserResponse = await fetch(
+      "http://localhost:3001/auth/register",
+      {
+        method: "post",
+        body: formData,
+      }
+    );
+    const savedUser = await savedUserResponse.json();
+    onSubmitProps.resetForm();
+    if (savedUser) {
+      setPageType("login");
+    }
+  };
+
+  const login = async (values, onSubmitProps) => {
+    const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
+      method: "post",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    const loggedIn = await loggedInResponse.json();
+    onSubmitProps.resetForm();
+    if (loggedIn) {
+      dispatch(
+        setLogin({
+          user: loggedIn.user,
+          token: loggedIn.token,
+        })
+      );
+      navigate("/home");
+    }
+  };
+
+  const handleFormSubmit = async (values, onSubmitProps) => {
+    if (isLogin) await login(values, onSubmitProps);
+    if (isRegister) await register(values, onSubmitProps);
+  };
 
   return (
     <Formik
@@ -199,6 +245,24 @@ const Form = () => {
             >
               {isLogin ? "LOGIN" : "REGISTER"}
             </Button>
+            <Typography
+              onClick={() => {
+                setPageType(isLogin ? "register" : "login");
+                resetForm();
+              }}
+              sx={{
+                textDecoration: "underline",
+                color: palette.primary.main,
+                "&:hover": {
+                  cursor: "pointer",
+                  color: palette.primary.light,
+                },
+              }}
+            >
+              {isLogin
+                ? "Don't have an account? Sign Up Here."
+                : "Already have an account? Login Here."}
+            </Typography>
           </Box>
         </form>
       )}
