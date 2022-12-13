@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -16,7 +16,7 @@ import { setLogin } from "state";
 import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
 
-const registerScheme = yup.object().shape({
+const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
   lastName: yup.string().required("required"),
   email: yup.string().email("invalid email").required("required"),
@@ -40,6 +40,7 @@ const initialValuesRegister = {
   occupation: "",
   picture: "",
 };
+
 const initialValuesLogin = {
   email: "",
   password: "",
@@ -50,12 +51,12 @@ const Form = () => {
   const { palette } = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isNonMobile = useMediaQuery("(min-width: 600px)");
+  const isNonMobile = useMediaQuery("(min-width:600px)");
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
 
   const register = async (values, onSubmitProps) => {
-    //this allow us ti send form info with image
+    // this allows us to send form info with image
     const formData = new FormData();
     for (let value in values) {
       formData.append(value, values[value]);
@@ -65,12 +66,13 @@ const Form = () => {
     const savedUserResponse = await fetch(
       "http://localhost:3001/auth/register",
       {
-        method: "post",
+        method: "POST",
         body: formData,
       }
     );
     const savedUser = await savedUserResponse.json();
     onSubmitProps.resetForm();
+
     if (savedUser) {
       setPageType("login");
     }
@@ -78,10 +80,8 @@ const Form = () => {
 
   const login = async (values, onSubmitProps) => {
     const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
-      method: "post",
-      headers: {
-        "Content-type": "application/json",
-      },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     });
     const loggedIn = await loggedInResponse.json();
@@ -106,7 +106,7 @@ const Form = () => {
     <Formik
       onSubmit={handleFormSubmit}
       initialValues={isLogin ? initialValuesLogin : initialValuesRegister}
-      validationSchema={isLogin ? loginSchema : registerScheme}
+      validationSchema={isLogin ? loginSchema : registerSchema}
     >
       {({
         values,
@@ -122,7 +122,7 @@ const Form = () => {
           <Box
             display="grid"
             gap="30px"
-            gridTemplateColumns="repeat(4, minmax(0,1fr))"
+            gridTemplateColumns="repeat(4, minmax(0, 1fr))"
             sx={{
               "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
             }}
@@ -186,7 +186,7 @@ const Form = () => {
                       setFieldValue("picture", acceptedFiles[0])
                     }
                   >
-                    {({ getRootProps, getInputProps }) => {
+                    {({ getRootProps, getInputProps }) => (
                       <Box
                         {...getRootProps()}
                         border={`2px dashed ${palette.primary.main}`}
@@ -194,7 +194,7 @@ const Form = () => {
                         sx={{ "&:hover": { cursor: "pointer" } }}
                       >
                         <input {...getInputProps()} />
-                        {!values.piture ? (
+                        {!values.picture ? (
                           <p>Add Picture Here</p>
                         ) : (
                           <FlexBetween>
@@ -202,12 +202,13 @@ const Form = () => {
                             <EditOutlinedIcon />
                           </FlexBetween>
                         )}
-                      </Box>;
-                    }}
+                      </Box>
+                    )}
                   </Dropzone>
                 </Box>
               </>
             )}
+
             <TextField
               label="Email"
               onBlur={handleBlur}
@@ -230,7 +231,8 @@ const Form = () => {
               sx={{ gridColumn: "span 4" }}
             />
           </Box>
-          {/*BUTTON SECTION */}
+
+          {/* BUTTONS */}
           <Box>
             <Button
               fullWidth
@@ -260,8 +262,8 @@ const Form = () => {
               }}
             >
               {isLogin
-                ? "Don't have an account? Sign Up Here."
-                : "Already have an account? Login Here."}
+                ? "Don't have an account? Sign Up here."
+                : "Already have an account? Login here."}
             </Typography>
           </Box>
         </form>
