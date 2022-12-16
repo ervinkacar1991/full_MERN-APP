@@ -56,7 +56,7 @@ const Navbar = () => {
             },
           }}
         >
-          Sociopedia
+          Ervin_Social
         </Typography>
         {isNonMobileScreens && (
           <FlexBetween
