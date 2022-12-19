@@ -50,8 +50,11 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
             color={main}
             variant="h5"
             fontWeight="500"
-            SX={{
-              "&:hover": { color: palette.primary.light, cursor: "pointer" },
+            sx={{
+              "&:hover": {
+                color: palette.primary.light,
+                cursor: "pointer",
+              },
             }}
           >
             {name}
@@ -66,7 +69,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
         sx={{ backgroundColor: primaryLight, p: "0.6rem" }}
       >
         {isFriend ? (
-          <PersonRemoveOutlined ax={{ color: primaryDark }} />
+          <PersonRemoveOutlined sx={{ color: primaryDark }} />
         ) : (
           <PersonAddOutlined sx={{ color: primaryDark }} />
         )}

@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
-import PostsWidget from "./PostWidget";
+import PostWidget from "./PostWidget";
 
 const PostsWidget = ({ userId, isProfile = false }) => {
   const dispatch = useDispatch();
@@ -16,6 +16,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     const data = await response.json();
     dispatch(setPosts({ posts: data }));
   };
+
   const getUserPosts = async () => {
     const response = await fetch(
       `http://localhost:3001/posts/${userId}/posts`,
@@ -51,7 +52,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
           likes,
           comments,
         }) => (
-          <PostsWidget
+          <PostWidget
             key={_id}
             postId={_id}
             postUserId={userId}
